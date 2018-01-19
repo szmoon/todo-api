@@ -38,8 +38,18 @@ const requestController = {
 
     pool.connect().then(client => {
       client.query('select * from projects where project_id=($1)',[projectId]).then(result => {
-        client.release();
-        return res.json(result.rows);
+        // client.release(); 
+        // return res.json(result.rows);
+        if (!result.rows[0]) {
+          console.log('Task must be created in an existing project');
+          client.release();
+          res.status(418).send('Task must be created in an existing project');
+        } else {
+          client.release();
+          return res.json(result.rows);
+        }
+      }).then( result => {
+        next();
       })
       .catch(e => {
         client.release();
@@ -121,6 +131,42 @@ const requestController = {
         console.error('query error', e.message, e.stack);
       });
     });
+  },
+
+  addTask(req, res, next) {
+    console.log('made it to add task');
+    let projectId = req.params.id;
+
+    // before making connection, make sure all task attributes included
+    if (!req.body.summary || !req.body.description || !req.body.due_date || !req.body.priority) {
+      res.status(418).send('Task must include summary, description, due date and priority.');
+    } else {
+      return res.json(result.rows);
+    }
+   
+    // console.log(keys);
+
+    // pool.connect().then(client => {
+    //   client.query('select * from projects where project_id = ($1)',[projectId])
+    //   .then(result => {
+    //     if (!result.rows[0]) {
+    //       console.log("project doesn't exist");
+    //       res.status(418).send('Task must be created in an existing project');
+    //     } else {
+    //       client.release();
+    //       return res.json(result.rows);
+    //     }
+    //     // if(!result.rows[0]) res.status(418).send('Task must be created in an existing project');
+    //     // if (res.json(result.rows) === []){
+    //     //   console.log("empty!");
+    //     // }
+        
+    //   })
+    //   .catch(e => {
+    //     client.release();
+    //     console.error('query error', e.message, e.stack);
+    //   });
+    // });
   },
 };
 
