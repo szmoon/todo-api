@@ -35,9 +35,24 @@ const requestController = {
 
   getProject(req, res, next) {
     let projectId = req.params.id;
-    // let results;
+
     pool.connect().then(client => {
       client.query('select * from projects where project_id=($1)',[projectId]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
+  addProject(req, res, next) {
+    let projectName = req.body.projectName;
+
+    pool.connect().then(client => {
+      client.query('insert into projects (project_name) values ($1)',[projectName]).then(result => {
         client.release();
         return res.json(result.rows);
       })
