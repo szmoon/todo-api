@@ -18,7 +18,7 @@ pool.on('error', (err, client) => {
 });
 
 const requestController = {
-
+  // PROJECT QUERIES
   getProjects(req, res, next) {
     let results;
     pool.connect().then(client => {
@@ -84,6 +84,35 @@ const requestController = {
 
     pool.connect().then(client => {
       client.query('delete from projects where project_id = ($1)',[projectId]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+  // TASK QUERIES
+  getTasks(req, res, next) {
+    let results;
+    pool.connect().then(client => {
+      client.query('select * from tasks').then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
+  getTask(req, res, next) {
+    let taskId = req.params.id;
+
+    pool.connect().then(client => {
+      client.query('select * from tasks where task_id=($1)',[taskId]).then(result => {
         client.release();
         return res.json(result.rows);
       })

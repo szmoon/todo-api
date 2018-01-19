@@ -17,6 +17,14 @@ app.post('/projects', requestCtrl.addProject); // create new project
 app.patch('/projects/:id', requestCtrl.updateProject); // update project name
 app.delete('/projects/:id', requestCtrl.deleteProject); // delete project
 
+// task routes
+app.get('/tasks', requestCtrl.getTasks); // get all tasks
+app.get('/tasks/:id', requestCtrl.getTask); // get one task
+// app.post('/tasks', requestCtrl.addTask); // create new task
+// app.patch('/tasks/:id', requestCtrl.updateTask); // update task
+// app.delete('/tasks/:id', requestCtrl.deleteTask); // delete task
+// get all tasks associated with one project
+
 const server = app.listen(3000, function() {
   const host = server.address().address;
   const port = server.address().port;
