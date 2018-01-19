@@ -78,7 +78,21 @@ const requestController = {
       });
     });
   },
-};
 
+  deleteProject(req, res, next) {
+    let projectId = req.params.id;
+
+    pool.connect().then(client => {
+      client.query('delete from projects where project_id = ($1)',[projectId]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+};
 
 module.exports = requestController;

@@ -15,3 +15,4 @@
 	"projectName": "[new name]"
 }
 ```
+- DELETE localhost:3000/projects/[id # starting from 1]
