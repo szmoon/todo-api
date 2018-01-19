@@ -6,6 +6,12 @@
 - POST localhost:3000/projects (header content-type: 'application/json')
 ```
 {
-	"projectName": "project name!"
+	"projectName": "[project name!]"
+}
+```
+- PATCH localhost:3000/projects/[id # starting from 1] (header content-type: 'application/json')
+```
+{
+	"projectName": "[new name]"
 }
 ```

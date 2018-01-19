@@ -62,6 +62,22 @@ const requestController = {
       });
     });
   },
+
+  updateProject(req, res, next) {
+    let projectId = req.params.id;
+    let newName = req.body.projectName;
+
+    pool.connect().then(client => {
+      client.query('update projects set project_name = ($1) where project_id = ($2)',[newName, projectId]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
 };
 
 
