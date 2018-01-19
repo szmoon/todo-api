@@ -28,11 +28,25 @@ const requestController = {
       })
       .catch(e => {
         client.release();
-        console.error('query error', e.message, e.stack)
+        console.error('query error', e.message, e.stack);
       });
     });
   },
 
+  getProject(req, res, next) {
+    let projectId = req.params.id;
+    // let results;
+    pool.connect().then(client => {
+      client.query('select * from projects where project_id=($1)',[projectId]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
 };
 
 

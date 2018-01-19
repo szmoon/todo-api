@@ -10,13 +10,18 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/www')); 
 
-app.get('/projects', requestCtrl.getProjects);
+// project routes
+app.get('/projects', requestCtrl.getProjects); // get all projects
+app.get('/projects/:id', requestCtrl.getProject); // get one project
+// app.post('/projects/:id', requestCtrl.addProject); // create new project
+// app.patch('/projects/:id', requestCtrl.updateProject); // update project name
+// app.delete('/projects/:id', requestCtrl.deleteProject); // delete project
 
 const server = app.listen(3000, function() {
   const host = server.address().address;
   const port = server.address().port;
 
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('Listening at http://%s:%s', host, port);
 });
 
 
