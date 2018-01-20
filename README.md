@@ -1,28 +1,28 @@
-## ToDo API
+# ToDo API
 
-### project requests
-- GET localhost:3000/projects
-- GET localhost:3000/projects/[id #]
-- POST localhost:3000/projects (header content-type: 'application/json')
+## project requests
+- **Retrieve all projetcs**: GET localhost:3000/projects
+- **Retrieve one project by id**: GET localhost:3000/projects/[id #]
+- **Add project (requires user email/pass)**: POST localhost:3000/projects (header content-type: 'application/json')
 ```
 {
-	"projectName": "[project name!]",
+  "projectName": "[project name!]",
   "email": "[email]",
   "password": "[password]"
 }
 ```
-- PATCH localhost:3000/projects/[id #] (header content-type: 'application/json')
+- **Update existing project by id**: PATCH localhost:3000/projects/[id #] (header content-type: 'application/json')
 ```
 {
-	"projectName": "[new name]"
+  "projectName": "[new name]"
 }
 ```
-- DELETE localhost:3000/projects/[id #] (deletes all tasks associated with project as well)
+- **Delete project by id**: DELETE localhost:3000/projects/[id #] (deletes all tasks associated with project as well)
 
 ### task requests
-- GET localhost:3000/tasks
-- GET localhost:3000/tasks/[task id #]
-- POST localhost:3000/tasks/[project id #] (header content-type: 'application/json')
+- **Retrieve all tasks**: GET localhost:3000/tasks
+- **Retrieve one task by id**: GET localhost:3000/tasks/[task id #]
+- **Add project (requires user email/pass)**: POST localhost:3000/tasks/[project id #] (header content-type: 'application/json')
 ```
 {
   "summary": "[task summary]",
@@ -33,7 +33,7 @@
   "password": "[password]"
 }
 ```
-- UPDATE localhost:3000/tasks/[task id #] (header content-type: 'application/json')
+- **Update existing task by id**: UPDATE localhost:3000/tasks/[task id #] (header content-type: 'application/json')
 ```
 {
   "summary": "[task summary]",
@@ -43,21 +43,21 @@
   "project_id": [id #]
 }
 ```
-- DELETE localhost:3000/tasks/[task id #]
-- GET localhost:3000/tasks/project/[project id #]
-- GET localhost:3000/tasks/sorted/['due_date' OR 'priority']
+- **Delete task by id**: DELETE localhost:3000/tasks/[task id #]
+- **Retrieve all tasks of specific project id**: GET localhost:3000/tasks/project/[project id #]
+- **Retrieve all tasks, sorted by due_date or priority descending**: GET localhost:3000/tasks/sorted/['due_date' OR 'priority']
 
 ### user requests
-- GET localhost:3000/users
-- GET localhost:3000/users/[id #]
-- POST localhost:3000/users/verify
+- **Retrieve all users**: GET localhost:3000/users
+- **Retrieve one user by id**: GET localhost:3000/users/[id #]
+- **Verify user email/pass**: POST localhost:3000/users/verify
 ```
 {
     "email": "[email to verify]",
     "password": "[password to verify]"
 }
 ```
-- POST localhost:3000/users (header content-type: 'application/json')
+- **Add user**: POST localhost:3000/users (header content-type: 'application/json')
 ```
 {
   "first_name": "[first name]",
@@ -66,7 +66,7 @@
   "password": "[password]"
 }
 ```
-- PATCH localhost:3000/users/[id #] (header content-type: 'application/json')
+- **Update user info by id**: PATCH localhost:3000/users/[id #] (header content-type: 'application/json')
 ```
 {
   "first_name": "[new first name]",
@@ -75,4 +75,4 @@
   "password": "[new password]"
 }
 ```
-- DELETE localhost:3000/users/[id #]
+- **Delete user by id**: DELETE localhost:3000/users/[id #]
