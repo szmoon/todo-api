@@ -36,6 +36,7 @@ const requestController = {
   getProject(req, res, next) {
     let projectId = req.params.id;
 
+
     pool.connect().then(client => {
       client.query('select * from projects where project_id=($1)',[projectId]).then(result => {
         // client.release(); 
@@ -258,6 +259,31 @@ const requestController = {
         } else {
           client.release();
           return res.json(result.rows);
+        }
+      }).then( result => {
+        next();
+      })
+      .catch(e => {
+        client.release();
+        console.log(e);
+      });
+    });
+  },
+
+  verifyUser(req, res, next) {
+    pool.connect().then(client => {
+      client.query('select * from users where email = ($1)',[req.body.email]).then(result => {
+        if (!result.rows[0]) {
+          res.status(418).send('User email does not exist');
+          throw 'User email does not exist';
+        } else {
+          if (req.body.password === result.rows[0].password) {
+            client.release();
+            return req;
+          } else {
+            res.status(418).send('Password does not match user email');
+            throw 'Password does not match user email';
+          }
         }
       }).then( result => {
         next();
