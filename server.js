@@ -21,7 +21,7 @@ app.delete('/projects/:id', requestCtrl.deleteProject); // delete project
 app.get('/tasks', requestCtrl.getTasks); // get all tasks
 app.get('/tasks/:id', requestCtrl.getTask); // get one task
 app.post('/tasks/:id', requestCtrl.getProject, requestCtrl.addTask); // create new task at id of project
-// app.patch('/tasks/:id', requestCtrl.updateTask); // update task
+app.patch('/tasks/:id', requestCtrl.updateTask); // update task
 // app.delete('/tasks/:id', requestCtrl.deleteTask); // delete task
 // get all tasks associated with one project
 

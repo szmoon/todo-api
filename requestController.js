@@ -147,6 +147,88 @@ const requestController = {
       });
     });
   },
+
+  updateTask(req, res, next) {
+    let taskId = req.params.id;
+
+    pool.connect().then(client => {
+      client.query('update tasks set summary = ($1) where task_id = ($2)',[req.body.summary, taskId])
+      client.query('update tasks set description = ($1) where task_id = ($2)',[req.body.description, taskId])
+      client.query('update tasks set due_date = ($1) where task_id = ($2)',[req.body.due_date, taskId])
+      client.query('update tasks set priority = ($1) where task_id = ($2)',[req.body.priority, taskId])
+      client.query('update tasks set project_id = ($1) where task_id = ($2)',[req.body.project_id, taskId])
+      .then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+
+    // pool.connect().then(client => {
+    //   client.query('update tasks set summary = ($1) where task_id = ($2)',[req.body[summary], taskId])
+
+    //   // .then(client => {
+    //   // client.query('update tasks set description = ($1) where task_id = ($2)',[req.body[description], taskId])
+    //   // })
+    //   .then(result => {
+    //     client.release();
+    //     return res.json(result.rows);
+    //   })
+    //   .catch(e => {
+    //     console.log("catch");
+    //     client.release();
+    //     console.error('query error', e.message, e.stack);
+    //   });
+    // });
+
+
+
+    // let taskId = req.params.id;
+    // let toUpdate = Object.keys(req.body); // get keys of task elements to update
+
+    // toUpdate.forEach(function(element) {
+    //   let queryText = 'update tasks set ' + element + ' = ($1) where task_id = ($2)'
+    //   console.log(queryText, req.body[element]);
+      
+    //   pool.connect().then(client => {
+    //     client.query(queryText,[req.body[element], taskId]).then(result => {
+    //       console.log(element);
+    //       client.release();
+    //       return res.json(result.rows);
+    //     })
+    //     .catch(e => {
+    //       console.log("catch");
+    //       client.release();
+    //       console.error('query error', e.message, e.stack);
+    //     });
+    //   });
+    // });
+
+    
+    // let taskId = req.params.id;
+    // let toUpdate = Object.keys(req.body); // get keys of task elements to update
+    // pool.connect()
+    // .then(client => {
+    //   // perform update for each key of toUpdate array
+    //   toUpdate.forEach(function(element) {
+    //     console.log(element);
+    //     let queryText = 'update tasks set ' + element + ' = ($1) where task_id = ($2)'
+    //     client.query(queryText,[req.body[element], taskId])
+    //     .then(result => {
+    //       client.release();
+    //       return res.json(result.rows);
+    //     })
+    //     .catch(e => {
+    //       client.release();
+    //       console.error('query error', e.message, e.stack);
+    //     });
+    //   });
+    // });
+  },
+
 };
 
 module.exports = requestController;
