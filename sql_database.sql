@@ -1,3 +1,4 @@
+-- Database is hosted on elephantsql.com - info saved here for own reference
 CREATE TABLE users (
 	user_id SERIAL PRIMARY KEY,
 	first_name varchar NOT NULL,
