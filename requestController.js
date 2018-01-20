@@ -58,10 +58,8 @@ const requestController = {
   },
 
   addProject(req, res, next) {
-    let projectName = req.body.projectName;
-
     pool.connect().then(client => {
-      client.query('insert into projects (project_name) values ($1)',[projectName]).then(result => {
+      client.query('insert into projects (project_name) values ($1)',[req.body.projectName]).then(result => {
         client.release();
         return res.json(result.rows);
       })
@@ -73,11 +71,8 @@ const requestController = {
   },
 
   updateProject(req, res, next) {
-    let projectId = req.params.id;
-    let newName = req.body.projectName;
-
     pool.connect().then(client => {
-      client.query('update projects set project_name = ($1) where project_id = ($2)',[newName, projectId]).then(result => {
+      client.query('update projects set project_name = ($1) where project_id = ($2)',[req.body.projectName, req.params.id]).then(result => {
         client.release();
         return res.json(result.rows);
       })
@@ -89,10 +84,8 @@ const requestController = {
   },
 
   deleteProject(req, res, next) {
-    let projectId = req.params.id;
-
     pool.connect().then(client => {
-      client.query('delete from projects where project_id = ($1)',[projectId]).then(result => {
+      client.query('delete from projects where project_id = ($1)',[req.params.id]).then(result => {
         client.release();
         return res.json(result.rows);
       })
@@ -118,10 +111,8 @@ const requestController = {
   },
 
   getTask(req, res, next) {
-    let taskId = req.params.id;
-
     pool.connect().then(client => {
-      client.query('select * from tasks where task_id=($1)',[taskId]).then(result => {
+      client.query('select * from tasks where task_id=($1)',[req.params.id]).then(result => {
         client.release();
         return res.json(result.rows);
       })
@@ -133,10 +124,8 @@ const requestController = {
   },
 
   addTask(req, res, next) {
-    let projectId = req.params.id;
-
     pool.connect().then(client => {
-      client.query('insert into tasks (summary, description, due_date, priority, project_id) values ($1, $2, $3, $4, $5)',[req.body.summary, req.body.description, req.body.due_date, req.body.priority, projectId])
+      client.query('insert into tasks (summary, description, due_date, priority, project_id) values ($1, $2, $3, $4, $5)',[req.body.summary, req.body.description, req.body.due_date, req.body.priority, req.params.id])
       .then(result => {
         client.release();
         return result.rows;
@@ -233,6 +222,84 @@ const requestController = {
 
     pool.connect().then(client => {
       client.query('delete from tasks where task_id = ($1)',[taskId]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
+   // USER QUERIES
+   getUsers(req, res, next) {
+    let results;
+    pool.connect().then(client => {
+      client.query('select * from users').then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
+  getUser(req, res, next) {
+    pool.connect().then(client => {
+      client.query('select * from users where user_id=($1)',[req.params.id]).then(result => {
+        // client.release(); 
+        // return res.json(result.rows);
+        if (!result.rows[0]) {
+          res.status(418).send('Task must be created in an existing project');
+          throw 'Must request an existing user';
+        } else {
+          client.release();
+          return res.json(result.rows);
+        }
+      }).then( result => {
+        next();
+      })
+      .catch(e => {
+        client.release();
+        console.log(e);
+      });
+    });
+  },
+
+  addUser(req, res, next) {
+    pool.connect().then(client => {
+      client.query('insert into users (first_name, last_name, email, password) values (($1),($2),($3),($4))',[req.body.first_name, req.body.last_name, req.body.email, req.body.password])
+      .then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
+  updateUser(req, res, next) {
+    pool.connect().then(client => {
+      client.query('update users set first_name = ($1), last_name = ($2), email = ($3), password = ($4) where user_id = ($5)',[req.body.first_name, req.body.last_name, req.body.email, req.body.password, req.params.id])
+      .then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
+  deleteUser(req, res, next) {
+    pool.connect().then(client => {
+      client.query('delete from users where user_id = ($1)',[req.params.id]).then(result => {
         client.release();
         return res.json(result.rows);
       })

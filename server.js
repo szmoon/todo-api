@@ -25,6 +25,13 @@ app.patch('/tasks/:id', requestCtrl.updateTask); // update task
 app.delete('/tasks/:id', requestCtrl.deleteTask); // delete task
 // get all tasks associated with one project
 
+// user routes
+app.get('/users', requestCtrl.getUsers); // get all projects
+app.get('/users/:id', requestCtrl.getUser); // get one project
+app.post('/users', requestCtrl.addUser); // create new project
+app.patch('/users/:id', requestCtrl.updateUser); // update project name
+app.delete('/users/:id', requestCtrl.deleteUser); // delete project
+
 const server = app.listen(3000, function() {
   const host = server.address().address;
   const port = server.address().port;
