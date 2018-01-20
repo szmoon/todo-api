@@ -44,11 +44,13 @@
 }
 ```
 - DELETE localhost:3000/tasks/[task id #]
+- GET localhost:3000/tasks/project/[project id #]
+- GET localhost:3000/tasks/sorted/['due_date' OR 'priority']
 
 ### user requests
 - GET localhost:3000/users
 - GET localhost:3000/users/[id #]
-- GET localhost:3000/users/verify
+- POST localhost:3000/users/verify
 ```
 {
     "email": "[email to verify]",

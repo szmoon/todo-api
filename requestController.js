@@ -34,13 +34,8 @@ const requestController = {
   },
 
   getProject(req, res, next) {
-    let projectId = req.params.id;
-
-
     pool.connect().then(client => {
-      client.query('select * from projects where project_id=($1)',[projectId]).then(result => {
-        // client.release(); 
-        // return res.json(result.rows);
+      client.query('select * from projects where project_id=($1)',[req.params.id]).then(result => {
         if (!result.rows[0]) {
           res.status(418).send('Task must be created in an existing project');
           throw 'Task must be created in an existing project';
@@ -233,6 +228,34 @@ const requestController = {
     });
   },
 
+  tasksByProject(req, res, next) {
+    let results;
+    pool.connect().then(client => {
+      client.query('select * from tasks where project_id = ($1) order by priority DESC',[req.params.id]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
+  sortedTasks(req, res, next) {
+    let results;
+    pool.connect().then(client => {
+      client.query('select * from tasks order by ($1) DESC',[req.params.id]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
+  },
+
    // USER QUERIES
    getUsers(req, res, next) {
     let results;
@@ -251,21 +274,12 @@ const requestController = {
   getUser(req, res, next) {
     pool.connect().then(client => {
       client.query('select * from users where user_id=($1)',[req.params.id]).then(result => {
-        // client.release(); 
-        // return res.json(result.rows);
-        if (!result.rows[0]) {
-          res.status(418).send('Task must be created in an existing project');
-          throw 'Must request an existing user';
-        } else {
-          client.release();
-          return res.json(result.rows);
-        }
-      }).then( result => {
-        next();
+        client.release();
+        return res.json(result.rows);
       })
       .catch(e => {
         client.release();
-        console.log(e);
+        console.error('query error', e.message, e.stack);
       });
     });
   },

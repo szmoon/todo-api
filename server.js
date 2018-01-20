@@ -23,7 +23,8 @@ app.get('/tasks/:id', requestCtrl.getTask); // get one task
 app.post('/tasks/:id', requestCtrl.verifyUser, requestCtrl.getProject, requestCtrl.addTask); // create new task at id of project
 app.patch('/tasks/:id', requestCtrl.updateTask); // update task
 app.delete('/tasks/:id', requestCtrl.deleteTask); // delete task
-// get all tasks associated with one project
+app.get('/tasks/project/:id', requestCtrl.tasksByProject); // get all tasks of specific project
+app.get('/tasks/sorted/:id', requestCtrl.sortedTasks); // get tasks sorted by priority or due_date
 
 // user routes
 app.get('/users', requestCtrl.getUsers); // get all users
