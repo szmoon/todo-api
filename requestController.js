@@ -185,7 +185,6 @@ const requestController = {
     // });
 
 
-
     // let taskId = req.params.id;
     // let toUpdate = Object.keys(req.body); // get keys of task elements to update
 
@@ -227,6 +226,21 @@ const requestController = {
     //     });
     //   });
     // });
+  },
+
+  deleteTask(req, res, next) {
+    let taskId = req.params.id;
+
+    pool.connect().then(client => {
+      client.query('delete from tasks where task_id = ($1)',[taskId]).then(result => {
+        client.release();
+        return res.json(result.rows);
+      })
+      .catch(e => {
+        client.release();
+        console.error('query error', e.message, e.stack);
+      });
+    });
   },
 
 };
