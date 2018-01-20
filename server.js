@@ -2,13 +2,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-
 const requestCtrl = require('./requestController');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use(express.static(__dirname + '/www')); 
 
 // project routes
 app.get('/projects', requestCtrl.getProjects); // get all projects
